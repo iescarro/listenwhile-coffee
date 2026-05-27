@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>
+      Listen While Having Coffee | Read your morning brew - out loud.
+    </title>
+    <!-- Bootstrap 5 CSS + Icons (clean base) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome 6 (icons for play/stop, coffee mug, etc) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      /* ----- COFFEE THEME & WARM DESIGN ----- */
+      :root {
+        --coffee-dark: #3e2723; /* rich espresso */
+        --coffee-medium: #5d4037; /* warm brown */
+        --coffee-light: #8d6e63; /* cappuccino beige */
+        --cream: #fff8e7; /* creamy background */
+        --coffee-foam: #efebe0; /* latte foam */
+        --highlight-gold: #ffd966; /* honey-gold highlight */
+        --accent-cinnamon: #c87a3e;
+      }
+
+      body {
+        background: linear-gradient(145deg, #f9f3e6 0%, #f0e4d0 100%);
+        font-family:
+          "Segoe UI",
+          "Poppins",
+          system-ui,
+          -apple-system,
+          "Roboto",
+          sans-serif;
+      }
+
+      /* coffee-themed card */
+      .coffee-card {
+        background: var(--cream);
+        border-radius: 2rem;
+        border: none;
+        box-shadow: 0 20px 35px -12px rgba(62, 39, 35, 0.3);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s;
+        backdrop-filter: blur(0px);
+        overflow: hidden;
+      }
+
+      .coffee-card:hover {
+        box-shadow: 0 25px 40px -14px rgba(62, 39, 35, 0.4);
+      }
+
+      /* header steam effect + coffee icon */
+      .coffee-header {
+        background: var(--coffee-dark);
+        border-bottom: 4px solid #c87a3e;
+        border-radius: 2rem 2rem 0 0;
+        padding: 1rem 1.5rem;
+      }
+
+      .coffee-badge {
+        background: rgba(255, 248, 225, 0.15);
+        backdrop-filter: blur(2px);
+        border-radius: 100px;
+        padding: 6px 14px;
+        font-weight: 500;
+      }
+
+      /* textarea with coffee stain inspiration */
+      .coffee-textarea {
+        background: #fffcf5;
+        border: 2px solid #d7c5ad;
+        border-radius: 1.5rem;
+        font-size: 1rem;
+        line-height: 1.65;
+        padding: 1rem 1.2rem;
+        transition: all 0.2s;
+        color: #2c1e1a;
+        font-family: "Georgia", "Times New Roman", serif;
+      }
+
+      .coffee-textarea:focus {
+        border-color: #c87a3e;
+        box-shadow: 0 0 0 3px rgba(200, 122, 62, 0.25);
+        background: #fffff2;
+      }
+
+      /* Buttons inspired by coffee shop */
+      .btn-coffee-play {
+        background: #6f4e37;
+        border: none;
+        padding: 10px 28px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border-radius: 60px;
+        color: white;
+        transition: 0.2s;
+        box-shadow: 0 5px 12px rgba(111, 78, 55, 0.3);
+      }
+
+      .btn-coffee-play:hover {
+        background: #5a3e2e;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(111, 78, 55, 0.4);
+      }
+
+      .btn-coffee-stop {
+        background: #a55d35;
+        border: none;
+        padding: 10px 28px;
+        font-weight: 600;
+        border-radius: 60px;
+        color: white;
+        transition: 0.2s;
+        box-shadow: 0 5px 12px rgba(165, 93, 53, 0.25);
+      }
+
+      .btn-coffee-stop:hover {
+        background: #8b4a2c;
+        transform: translateY(-2px);
+      }
+
+      /* reading panel with coffee foam background */
+      .coffee-reading-panel {
+        background: #fff9ef;
+        border-top: 1px solid #e6d5bc;
+        border-radius: 0 0 1.8rem 1.8rem;
+      }
+
+      .panel-title {
+        color: #5d4037;
+        border-left: 5px solid #c87a3e;
+        padding-left: 1rem;
+        font-weight: 700;
+      }
+
+      /* custom highlight for current paragraph (like coffee glowing) */
+      .highlight-paragraph {
+        background: linear-gradient(120deg, #ffe4b5, #ffd9a5) !important;
+        border-left: 6px solid #c87a3e !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+        font-weight: 500;
+        color: #3e2723;
+      }
+
+      .para-line {
+        display: block;
+        padding: 0.9rem 1rem;
+        margin: 0.5rem 0;
+        border-radius: 1.2rem;
+        background: rgba(250, 245, 235, 0.7);
+        border-left: 3px solid transparent;
+        transition: all 0.15s linear;
+        cursor: default;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #3e2a24;
+      }
+
+      .para-line:hover {
+        background: #fcf3e2;
+        transform: translateX(3px);
+      }
+
+      /* scrollbar like coffee wood */
+      .reading-area::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .reading-area::-webkit-scrollbar-track {
+        background: #e9ddcd;
+        border-radius: 10px;
+      }
+
+      .reading-area::-webkit-scrollbar-thumb {
+        background: #b87c4e;
+        border-radius: 10px;
+      }
+
+      /* steam effect via pseudo */
+      .steam-badge {
+        position: relative;
+        display: inline-block;
+      }
+
+      .steam-badge i {
+        animation: steamFade 2s infinite ease;
+      }
+
+      @keyframes steamFade {
+        0% {
+          opacity: 0.4;
+          transform: translateY(0px);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(-3px);
+        }
+        100% {
+          opacity: 0.4;
+          transform: translateY(0px);
+        }
+      }
+
+      footer {
+        border-top: 1px dashed #d9c7ae;
+        color: #6f4e37;
+      }
+
+      .coffee-icon-spin {
+        animation: swirl 6s infinite linear;
+      }
+
+      @keyframes swirl {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .info-badge-coffee {
+        background: #eeddcb;
+        color: #4e342e;
+        border-radius: 40px;
+        font-weight: 500;
+        padding: 0.4rem 1rem;
+      }
+
+      @media (max-width: 576px) {
+        .btn-coffee-play,
+        .btn-coffee-stop {
+          padding: 8px 20px;
+          font-size: 0.9rem;
+        }
+        .para-line {
+          padding: 0.65rem 0.85rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container py-4 py-md-5">
+      <!-- Coffee Header with steam effect -->
+      <div class="text-center mb-4 position-relative">
+        <div class="steam-badge">
+          <i
+            class="fas fa-mug-hot fa-2x text-coffee"
+            style="color: #8b5a2b"
+          ></i>
+          <i
+            class="fas fa-wind fa-xs position-absolute top-0 start-50 translate-middle text-warning opacity-50"
+            style="animation: steamFade 2s infinite; margin-top: -8px"
+          ></i>
+        </div>
+        <h1
+          class="display-5 fw-bold mt-2"
+          style="color: #3e2723; font-weight: 700"
+        >
+          <i class="fas fa-coffee me-2" style="color: #a86f3c"></i> Listen while
+          having Coffee
+        </h1>
+        <p class="lead" style="color: #6f4e37; font-weight: 500">
+          ☕ Warm text-to-speech · current paragraph glows like golden honey
+        </p>
+        <div class="d-flex justify-content-center">
+          <span class="info-badge-coffee badge px-3 py-2"
+            ><i class="fas fa-ear-listen me-1"></i> Highlight follows
+            voice</span
+          >
+        </div>
+      </div>
+
+      <!-- MAIN COFFEE CARD: Large textarea area -->
+      <div class="coffee-card mb-4">
+        <div class="coffee-header">
+          <div class="d-flex align-items-center gap-2 text-white">
+            <i class="fas fa-pen-fancy fs-5"></i>
+            <span class="fw-semibold fs-6">☕ fresh brew text</span>
+            <span class="ms-auto coffee-badge text-white-50"
+              ><i class="far fa-copy"></i> paste & enjoy</span
+            >
+          </div>
+        </div>
+        <div class="card-body p-4 p-lg-5">
+          <label class="form-label fw-semibold fs-5 mb-2" style="color: #5d4037"
+            ><i class="fas fa-scroll me-2"></i>Your roasted content</label
+          >
+          <textarea
+            id="textArea"
+            class="form-control coffee-textarea"
+            rows="8"
+            placeholder="📝  Paste your story, article or notes here...&#10;&#10;✦  The morning coffee ritual awakens the soul.&#10;✦  Each paragraph will be spoken aloud and highlighted in the reading panel.&#10;✦  Enjoy the smooth barista-style narration.&#10;✦  Perfect for proofreading or relaxing with a cup of coffee."
+          ></textarea>
+
+          <div
+            class="d-flex flex-wrap gap-4 justify-content-between align-items-center mt-4 pt-2"
+          >
+            <div class="d-flex gap-3">
+              <button id="playBtn" class="btn btn-coffee-play btn-lg">
+                <i class="fas fa-play me-2"></i> Brew & Play
+              </button>
+              <button id="stopBtn" class="btn btn-coffee-stop btn-lg">
+                <i class="fas fa-stop me-2"></i> Stop & Sip
+              </button>
+            </div>
+            <div class="small fst-italic" style="color: #8d6e63">
+              <i class="fas fa-mug-saucer me-1"></i> paragraphs split by line
+              breaks
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reading panel: highlights the exact paragraph being read (coffee style) -->
+      <div class="coffee-card">
+        <div
+          class="card-header bg-transparent border-0 pt-4 px-4"
+          style="background: #fff9ef"
+        >
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-book-open fs-4" style="color: #b87c4e"></i>
+            <h5 class="panel-title mb-0 py-2 fs-5 fw-bold">
+              📖 reading barista panel
+            </h5>
+            <span class="ms-auto small text-muted"
+              ><i class="fas fa-highlighter text-warning"></i> currently
+              speaking = golden glow</span
+            >
+          </div>
+        </div>
+        <div class="card-body coffee-reading-panel p-4">
+          <div
+            id="paragraphsContainer"
+            class="reading-area"
+            style="max-height: 400px; overflow-y: auto; padding-right: 8px"
+          >
+            <!-- dynamic paragraphs injected here -->
+            <div class="text-center py-5" style="color: #b89a7a">
+              <i class="fas fa-coffee fa-2x mb-2 opacity-50"></i>
+              <p class="mb-0">
+                ☕ Ready for your text. <br />
+                Click "Brew & Play" after pasting content.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="card-footer bg-transparent border-0 pb-3 text-center small"
+          style="color: #9b7b5e"
+        >
+          <i class="fas fa-regular fa-bell"></i> paragraph highlight syncs with
+          speech engine • modern browsers only
+        </div>
+      </div>
+
+      <footer class="text-center mt-4 pt-3 pb-2">
+        <i class="fas fa-heart" style="color: #c87a3e"></i> coffee-themed voice
+        reader · each spoken paragraph gets a
+        <strong class="text-dark">warm honey highlight</strong>
+      </footer>
+    </div>
+
+    <script>
+      // DOM elements
+      const textarea = document.getElementById("textArea");
+      const playBtn = document.getElementById("playBtn");
+      const stopBtn = document.getElementById("stopBtn");
+      const paragraphsContainer = document.getElementById(
+        "paragraphsContainer",
+      );
+
+      // speech variables
+      let currentUtterance = null;
+      let currentParagraphIndex = 0;
+      let paragraphsList = [];
+      let isPlaying = false;
+      let speechSupported = true;
+
+      // helper: Split text into paragraphs by newline (every non-empty line becomes a paragraph)
+      // This gives natural paragraph-to-highlight mapping when writing line by line.
+      function extractParagraphsFromText(rawText) {
+        let lines = rawText.split(/\r?\n/);
+        let result = [];
+        for (let line of lines) {
+          let trimmed = line.trim();
+          if (trimmed !== "") {
+            result.push(trimmed);
+          }
+          // skip empty lines, but they don't create paragraphs (cleaner UI)
+        }
+        // edge case: if after cleaning we have nothing but raw text is not empty, treat as single block
+        if (result.length === 0 && rawText.trim() !== "") {
+          result = [rawText.trim()];
+        }
+        return result;
+      }
+
+      // escape HTML for safety
+      function escapeHtml(str) {
+        return str
+          .replace(/[&<>]/g, function (m) {
+            if (m === "&") return "&amp;";
+            if (m === "<") return "&lt;";
+            if (m === ">") return "&gt;";
+            return m;
+          })
+          .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
+            return c;
+          });
+      }
+
+      // update the preview panel with current paragraphs, highlighting given index (if playing)
+      function updatePreviewPanel(highlightIndex = -1) {
+        if (!paragraphsContainer) return;
+        if (!paragraphsList.length) {
+          paragraphsContainer.innerHTML = `<div class="text-center py-5" style="color: #B89A7A;"><i class="fas fa-coffee fa-2x mb-2 opacity-50"></i><p>☕ No paragraphs found. Add text with line breaks or paste content above.</p></div>`;
+          return;
+        }
+        let html = "";
+        paragraphsList.forEach((para, idx) => {
+          const isActive = idx === highlightIndex && isPlaying === true;
+          const highlightClass = isActive ? "highlight-paragraph" : "";
+          const safeText = escapeHtml(para);
+          // data attribute for potential debugging
+          html += `<div class="para-line ${highlightClass}" data-para-index="${idx}">${safeText}</div>`;
+        });
+        paragraphsContainer.innerHTML = html;
+        // scroll into view only when highlighted (enhance user exp)
+        if (highlightIndex !== -1 && isPlaying) {
+          setTimeout(() => {
+            const activeElement = document.querySelector(
+              ".highlight-paragraph",
+            );
+            if (activeElement && paragraphsContainer) {
+              activeElement.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }
+          }, 60);
+        }
+      }
+
+      // stop speech completely, reset highlight
+      function stopSpeaking(resetHighlight = true) {
+        if (window.speechSynthesis) {
+          window.speechSynthesis.cancel();
+        }
+        if (currentUtterance) {
+          currentUtterance.onend = null;
+          currentUtterance.onerror = null;
+          currentUtterance = null;
+        }
+        isPlaying = false;
+        currentParagraphIndex = 0;
+        if (resetHighlight) {
+          updatePreviewPanel(-1);
+        }
+      }
+
+      // recursively speak each paragraph
+      function speakParagraphAtIndex(index) {
+        if (!window.speechSynthesis) {
+          console.warn("SpeechSynthesis missing");
+          return false;
+        }
+        if (index >= paragraphsList.length) {
+          // finished reading all paragraphs
+          stopSpeaking(true);
+          isPlaying = false;
+          updatePreviewPanel(-1);
+          return false;
+        }
+        const textToSpeak = paragraphsList[index];
+        if (!textToSpeak || textToSpeak.trim() === "") {
+          speakParagraphAtIndex(index + 1);
+          return false;
+        }
+
+        // cancel any leftover ongoing utterance to avoid overlap (clean)
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        currentUtterance = utterance;
+        // warm voice settings (moderate pace)
+        utterance.rate = 0.92;
+        utterance.pitch = 1.02;
+        utterance.lang = "en-US";
+
+        utterance.onstart = () => {
+          currentParagraphIndex = index;
+          isPlaying = true;
+          updatePreviewPanel(currentParagraphIndex);
+        };
+
+        utterance.onend = () => {
+          if (!isPlaying) return;
+          const nextIdx = currentParagraphIndex + 1;
+          if (nextIdx < paragraphsList.length) {
+            speakParagraphAtIndex(nextIdx);
+          } else {
+            // end of entire speech
+            isPlaying = false;
+            currentParagraphIndex = -1;
+            updatePreviewPanel(-1);
+            currentUtterance = null;
+          }
+        };
+
+        utterance.onerror = (event) => {
+          console.warn("speech error event: ", event);
+          // gentle fallback: stop on error to avoid infinite loop
+          if (isPlaying) {
+            stopSpeaking(true);
+          }
+        };
+
+        window.speechSynthesis.speak(utterance);
+        return true;
+      }
+
+      // start reading: build paragraphs from textarea and play from beginning
+      function startReading() {
+        // stop any ongoing playback
+        stopSpeaking(true);
+
+        const rawContent = textarea.value;
+        let newParagraphs = extractParagraphsFromText(rawContent);
+        if (newParagraphs.length === 0) {
+          paragraphsContainer.innerHTML = `<div class="alert alert-warning text-center m-3" style="background:#F7E4CF; border-color:#DFC9AE; color:#6F4E37;"><i class="fas fa-coffee me-2"></i> Oops, no text to read. Please write or paste some content into the coffee text area.</div>`;
+          return;
+        }
+        paragraphsList = newParagraphs;
+        currentParagraphIndex = 0;
+        isPlaying = true;
+        // reset highlights before start
+        updatePreviewPanel(-1);
+        // begin speaking from first paragraph
+        const started = speakParagraphAtIndex(0);
+        if (!started) {
+          isPlaying = false;
+          paragraphsContainer.innerHTML = `<div class="alert alert-danger text-center"><i class="fas fa-microphone-slash"></i> Speech synthesis not supported in this browser. Please try Chrome, Edge, or Safari.</div>`;
+        }
+      }
+
+      // Play button handler: restart playback fresh
+      function onPlayClicked() {
+        if (isPlaying) {
+          // if already playing, stop and start fresh (expected behaviour: restart reading)
+          stopSpeaking(true);
+        }
+        startReading();
+      }
+
+      // stop button handler: silence & clear highlight
+      function onStopClicked() {
+        stopSpeaking(true);
+        isPlaying = false;
+        currentParagraphIndex = 0;
+        updatePreviewPanel(-1);
+      }
+
+      // Synchronize preview when user types (without interrupting if playing? we will auto-stop if text changes)
+      // Because to avoid de-sync with current speaking index, best practice: automatically stop reading when user edits text.
+      let syncTimeout;
+      function handleTextareaChange() {
+        if (isPlaying) {
+          // Auto-stop reading because content changed while speaking -> avoid mismatch
+          stopSpeaking(true);
+          isPlaying = false;
+          // show a subtle info in panel (non-intrusive)
+          const tempMsg = document.createElement("div");
+          paragraphsContainer.innerHTML = `<div class="alert alert-info py-2 text-center m-2" style="background:#ECDDCC; border-color:#D3BFA4; font-size:0.85rem;"><i class="fas fa-pencil-alt me-1"></i> Text edited — playback stopped. Press 'Brew & Play' again.</div>`;
+          setTimeout(() => {
+            if (!isPlaying && paragraphsList.length > 0) {
+              // update preview normally but not playing
+              const freshParas = extractParagraphsFromText(textarea.value);
+              if (freshParas.length) {
+                paragraphsList = freshParas;
+                updatePreviewPanel(-1);
+              } else {
+                paragraphsList = [];
+                updatePreviewPanel(-1);
+              }
+            } else if (!isPlaying) {
+              const freshParas = extractParagraphsFromText(textarea.value);
+              paragraphsList = freshParas;
+              updatePreviewPanel(-1);
+            }
+          }, 80);
+          return;
+        }
+        // if not playing, just update preview smoothly
+        if (syncTimeout) clearTimeout(syncTimeout);
+        syncTimeout = setTimeout(() => {
+          const updatedParas = extractParagraphsFromText(textarea.value);
+          if (updatedParas.length > 0) {
+            paragraphsList = updatedParas;
+            updatePreviewPanel(-1);
+          } else {
+            paragraphsList = [];
+            updatePreviewPanel(-1);
+          }
+        }, 100);
+      }
+
+      // attach live event to textarea
+      textarea.addEventListener("input", function () {
+        if (isPlaying) {
+          // immediate stop on any typing while reading
+          stopSpeaking(true);
+          isPlaying = false;
+          // force immediate preview refresh of new content
+          const newParas = extractParagraphsFromText(textarea.value);
+          paragraphsList = newParas;
+          updatePreviewPanel(-1);
+        } else {
+          if (syncTimeout) clearTimeout(syncTimeout);
+          syncTimeout = setTimeout(() => {
+            const newPars = extractParagraphsFromText(textarea.value);
+            paragraphsList = newPars;
+            updatePreviewPanel(-1);
+          }, 80);
+        }
+      });
+
+      // initial load: prefill with coffee-themed demo text (warm welcoming)
+      //       const defaultCoffeeText = `☕ First Sip: Welcome to your coffee-themed voice reader.
+      // Each line forms a speaking paragraph.
+      // ✨ Listen as the golden highlight moves from paragraph to paragraph.
+      // 🌿 Relax, proofread, or enjoy articles hands-free.
+      // Press "Brew & Play" and let the words flow like a smooth espresso.`;
+      const defaultCoffeeText = "";
+
+      textarea.value = defaultCoffeeText;
+
+      // Bootstrap speech synthesis support check
+      if (!window.speechSynthesis) {
+        speechSupported = false;
+        playBtn.disabled = true;
+        stopBtn.disabled = true;
+        paragraphsContainer.innerHTML = `<div class="alert alert-danger m-3">⚠️ Your browser does not support Web Speech API. Please use a modern browser (Chrome/Edge/Safari).</div>`;
+      } else {
+        playBtn.disabled = false;
+        stopBtn.disabled = false;
+      }
+
+      // Initialize preview with default paragraphs
+      function initPreview() {
+        const initParas = extractParagraphsFromText(textarea.value);
+        paragraphsList = initParas;
+        updatePreviewPanel(-1);
+      }
+
+      initPreview();
+
+      // attach event handlers
+      playBtn.addEventListener("click", onPlayClicked);
+      stopBtn.addEventListener("click", onStopClicked);
+
+      // Cleanup before page unload
+      window.addEventListener("beforeunload", () => {
+        if (window.speechSynthesis) {
+          window.speechSynthesis.cancel();
+        }
+      });
+
+      // small fallback: if speech ends abruptly due to external reasons, reset UI
+      setInterval(() => {
+        if (
+          isPlaying &&
+          window.speechSynthesis &&
+          !window.speechSynthesis.speaking &&
+          currentUtterance
+        ) {
+          // possibly stuck, but we check if next paragraph is needed (edge case)
+          if (
+            currentParagraphIndex + 1 <= paragraphsList.length &&
+            paragraphsList.length > 0 &&
+            currentParagraphIndex >= 0
+          ) {
+            // attempt to advance if needed but only if we are really at end of speech but isPlaying flag true
+            if (currentParagraphIndex + 1 < paragraphsList.length) {
+              speakParagraphAtIndex(currentParagraphIndex + 1);
+            } else {
+              // end of speech
+              stopSpeaking(true);
+              isPlaying = false;
+              updatePreviewPanel(-1);
+            }
+          } else if (currentParagraphIndex >= paragraphsList.length - 1) {
+            stopSpeaking(true);
+            isPlaying = false;
+            updatePreviewPanel(-1);
+          }
+        }
+      }, 400);
+
+      // fix for multiple synthetic utterances sometimes not resetting highlight after stop
+      window.addEventListener("load", () => {
+        // final sync to be safe
+        initPreview();
+      });
+    </script>
+  </body>
+</html>
